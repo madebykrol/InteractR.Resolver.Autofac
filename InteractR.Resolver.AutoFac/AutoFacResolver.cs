@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using InteractorHub.Resolver;
+using InteractR.Interactor;
+using InteractR.Resolver;
 
 namespace InteractorHub.Resolvers.AutoFac
 {
@@ -12,24 +13,14 @@ namespace InteractorHub.Resolvers.AutoFac
         {
             _container = container;
         }
-        public TInteractor ResolveInteractor<TInteractor>()
-        {
-            return Resolve<TInteractor>();
-        }
-
-        public object ResolveInteractor(Type interactorType)
-        {
-            return Resolve(interactorType);
-        }
 
         private T Resolve<T>()
         {
             return _container.Resolve<T>();
         }
-
-        private object Resolve(Type t)
+        public IInteractor<TUseCase, TOutputPort> ResolveInteractor<TUseCase, TOutputPort>(TUseCase useCase) where TUseCase : IUseCase<TOutputPort>
         {
-            return _container.Resolve(t);
+            return Resolve<IInteractor<TUseCase, TOutputPort>>();
         }
     }
 }
