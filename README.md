@@ -1,7 +1,7 @@
-# InteractR.Resolver.StructureMap
+# InteractR.Resolver.AutoFac
 For documentation see [InteractR](https://github.com/madebykrol/InteractR)
 
 Install from nuget.
 ```PowerShell
-PM > Install-Package InteractR.Resolver.AutoFac -Version 1.0.0
+PM > Install-Package InteractR.Resolver.AutoFac -Version 2.0.0
 ```
