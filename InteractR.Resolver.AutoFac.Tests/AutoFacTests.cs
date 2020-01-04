@@ -16,18 +16,20 @@ namespace InteractorHub.Tests.Resolvers.AutoFac
     {
         private IContainer _container;
         private IInteractorHub _interactorHub;
+
         private IInteractor<MockUseCase, IMockOutputPort> _useCaseInteractor;
 
         private IMiddleware<MockUseCase, IMockOutputPort> _middleware1;
         private IMiddleware<MockUseCase, IMockOutputPort> _middleware2;
 
-
+        private IMiddleware _globalMiddleware;
 
         [SetUp]
         public void Setup()
         {
             var builder = new ContainerBuilder();
             _useCaseInteractor = Substitute.For<IInteractor<MockUseCase, IMockOutputPort>>();
+
             _middleware1 = Substitute.For<IMiddleware<MockUseCase, IMockOutputPort>>();
             _middleware1.Execute(
                     Arg.Any<MockUseCase>(),
@@ -46,6 +48,14 @@ namespace InteractorHub.Tests.Resolvers.AutoFac
                 .ReturnsForAnyArgs(x => new UseCaseResult(true))
                 .AndDoes(x => x.Arg<Func<MockUseCase, Task<UseCaseResult>>>().Invoke(x.Arg<MockUseCase>()));
 
+            _globalMiddleware = Substitute.For<IMiddleware>();
+            _globalMiddleware.Execute(
+                    Arg.Any<MockUseCase>(),
+                    d => Task.FromResult(new UseCaseResult(true)),
+                    Arg.Any<CancellationToken>())
+                .ReturnsForAnyArgs(x => new UseCaseResult(true))
+                .AndDoes(x => x.Arg<Func<MockUseCase, Task<UseCaseResult>>>().Invoke(x.Arg<MockUseCase>()));
+
 
             builder.RegisterInstance(_useCaseInteractor).As<IInteractor<MockUseCase, IMockOutputPort>>();
 
@@ -53,11 +63,12 @@ namespace InteractorHub.Tests.Resolvers.AutoFac
                 .As<IMiddleware<MockUseCase, IMockOutputPort>>();
             builder.RegisterInstance(_middleware2)
                 .As<IMiddleware<MockUseCase, IMockOutputPort>>();
+            builder.RegisterInstance(_globalMiddleware)
+                .As<IMiddleware>();
 
             _container = builder.Build();
 
             _interactorHub = new Hub(new AutoFacResolver(_container));
-
         }
 
         [Test]
