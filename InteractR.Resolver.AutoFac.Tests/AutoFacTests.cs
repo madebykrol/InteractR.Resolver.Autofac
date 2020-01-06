@@ -5,6 +5,7 @@ using Autofac;
 using InteractorHub.Resolvers.AutoFac;
 using InteractR;
 using InteractR.Interactor;
+using InteractR.Resolver.AutoFac;
 using InteractR.Resolver.AutoFac.Tests.Mocks;
 using NSubstitute;
 using NUnit.Framework;
@@ -66,9 +67,11 @@ namespace InteractorHub.Tests.Resolvers.AutoFac
             builder.RegisterInstance(_globalMiddleware)
                 .As<IMiddleware>();
 
+            builder.RegisterModule(new ResolverModule());
+
             _container = builder.Build();
 
-            _interactorHub = new Hub(new AutoFacResolver(_container));
+            _interactorHub = _container.Resolve<IInteractorHub>();
         }
 
         [Test]

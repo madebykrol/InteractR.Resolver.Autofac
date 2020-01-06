@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <PackageProjectUrl>https://github.com/madebykrol/InteractR.Resolver.Autofac</PackageProjectUrl>
     <Authors>Kristoffer Olsson</Authors>
     <Company>Kristoffer Olsson</Company>
